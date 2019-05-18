@@ -7,10 +7,12 @@
 
 (defpackage #:bcl
   (:use #:c2cl)
+  (:shadow #:let)
   (:export
    #:a
    #:eval-always
-   #:^)
+   #:^
+   #:let)
   (:export 
    #:<arithmetic-error>
    #:<array>
@@ -1225,6 +1227,12 @@
      ,@body))
 
 (bcl::eval-always 
+  (defmacro bcl::let ((&rest specs) &body body)
+    (if (every #'consp specs)
+        `(cl:let (,@specs) ,@body)
+        `(lambda (,@(mapcan (lambda (x) (and (atom x) (list x))) specs))
+           (let (,@(remove-if #'atom specs))
+             ,@body))))
   (setf (fdefinition 'bcl::a)
         (fdefinition 'make-instance))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1257,10 +1265,6 @@
                          (fdefinition 'cl-ppcre:regex-replace-all))))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
-
-
-
- 
 
 
 
