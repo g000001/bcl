@@ -8,7 +8,8 @@
 
 #+lispworks
 (cl:defpackage #:bcl-user
-  (:use #:bcl :capi))
+  (:use #:bcl :capi)
+  (:export #:d))
 
 
 #+lispworks
@@ -17,7 +18,9 @@
         :for sym := (intern (concatenate 'string "<" (string s) ">") :bcl-user)
         :when (find-class s nil)
         :do (eval (print `(defconstant ,sym (find-class ',s))))
-        :and :collect (copy-symbol sym)))
+        :and :collect (copy-symbol sym))
+  (setf (fdefinition 'bcl-user::d)
+        (fdefinition 'describe)))
 
 
 

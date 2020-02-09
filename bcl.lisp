@@ -5,14 +5,26 @@
 
 (cl:in-package #:bcl.internal)
 
+'(loop :for s :being :the :external-symbols :of :series
+      :collect (make-symbol (string s)))
+
 (defpackage #:bcl
-  (:use #:c2cl)
-  (:shadow #:let)
+  (:use #:c2cl #:series)
+  (:shadow #:get #:set)
+  (:shadowing-import-from #:nil #:let)
   (:export
+   #:*bcl*
+   #:set
+   #:loop
    #:a
+   #:isa
    #:eval-always
    #:^
-   #:let)
+   #:fun
+   #:let
+   #:get
+   #:put
+   #:prop)
   (:export 
    #:<arithmetic-error>
    #:<array>
@@ -580,17 +592,7 @@
    #:gensym
    #:gentemp
    #:get
-   #:get-decoded-time
-   #:get-dispatch-macro-character
-   #:get-internal-real-time
-   #:get-internal-run-time
-   #:get-macro-character
-   #:get-output-stream-string
-   #:get-properties
    #:get-setf-expansion
-   #:get-universal-time
-   #:getf
-   #:gethash
    #:go
    #:graphic-char-p
    #:handler-bind
@@ -956,12 +958,9 @@
    #:serious-condition
    #:set
    #:set-difference
-   #:set-dispatch-macro-character
    #:set-exclusive-or
    #:set-funcallable-instance-function
-   #:set-macro-character
    #:set-pprint-dispatch
-   #:set-syntax-from-char
    #:setf
    #:setq
    #:seventh
@@ -1217,24 +1216,124 @@
    #:*allow-named-registers*
    #:*optimize-char-classes*
    #:*regex-char-code-limit*
-   #:*use-bmh-matchers*))
+   #:*use-bmh-matchers*)
+  (:export
+   ;; series
+   #:collecting-fn
+   #:collect-length
+   #:to-alter
+   #:optimizable-series-function
+   #:scan-multiple
+   #:gatherlet
+   #:collect-nconc
+   #:scan-sublists
+   #:fgatherlet
+   #:off-line-port
+   #:generator
+   #:gather-next
+   #:gathering
+   #:collect-file
+   #:collect-alist
+   #:collect-plist
+   #:collect-first
+   #:scan-alist
+   #:scan-stream
+   #:producing
+   #:scan-range
+   #:collect-last
+   #:encapsulated
+   #:series
+   #:series-element-type
+   #:collect-hash
+   #:collect-fn
+   #:indefinite-extent
+   #:collect-and
+   #:collect-nth
+   #:collect-or
+   #:collect-append
+   #:collect
+   #:fgathering
+   #:gather-result
+   #:previous
+   #:gatherer
+   #:catenate
+   #:choose
+   #:next-in
+   #:mingle
+   #:make-series
+   #:*last-series-loop*
+   #:iterate
+   #:collect-ignore
+   #:*series-expression-cache*
+   #:result-of
+   #:split
+   #:positions
+   #:spread
+   #:scan-symbols
+   #:*last-series-error*
+   #:scan-lists-of-lists-fringe
+   #:expand
+   #:scan-plist
+   #:split-if
+   #:until-if
+   #:fgather-result
+   #:scan-fn-inclusive
+   #:collect-stream
+   #:next-out
+   #:propagate-alterability
+   #:collect-sum
+   #:scan-hash
+   #:collect-max
+   #:subseries
+   #:terminate-producing
+   #:collect-product
+   #:map-fn
+   #:collect-min
+   #:mapping
+   #:latch
+   #:until
+   #:fgather-next
+   #:scan-fn
+   #:cotruncate
+   #:alter
+   #:choose-if
+   #:scan-file
+   #:scan-lists-of-lists
+   #:scan
+   #:*suppress-series-warnings*
+   #:mask
+   #:chunk)
+  (:export
+   ;; utils
+   #:in-syntax
+   #:openi
+   #:openo
+   #:opena
+   #:fstring
+   #:fpathname))
 
-(defmacro bcl::^ ((&rest args) &body body)
+(cl:in-package #:bcl)
+
+(defmacro ^ ((&rest args) &body body)
   `(function (lambda (,@args) ,@body)))
 
-(defmacro bcl::eval-always (&body body)
+(defmacro fun ((&rest args) &body body)
+  `(function (lambda (,@args) ,@body)))
+
+(defmacro eval-always (&body body)
   `(eval-when (:compile-toplevel :load-toplevel :execute)
      ,@body))
 
-(bcl::eval-always 
-  (defmacro bcl::let ((&rest specs) &body body)
-    (if (every #'consp specs)
-        `(cl:let (,@specs) ,@body)
-        `(lambda (,@(mapcan (lambda (x) (and (atom x) (list x))) specs))
-           (let (,@(remove-if #'atom specs))
-             ,@body))))
-  (setf (fdefinition 'bcl::a)
+
+(eval-always 
+  (setf (fdefinition 'a)
         (fdefinition 'make-instance))
+  (setf (fdefinition 'prop)
+        (fdefinition 'getf))
+  (setf (fdefinition 'isa)
+        (fdefinition 'typep))
+  (setf (fdefinition 'call)
+        (fdefinition 'funcall))
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (loop :for s :being :the :external-symbols :of :cl
         :for sym := (intern (concatenate 'string "<" (string s) ">") :bcl)
@@ -1255,17 +1354,61 @@
                     (setf (fdefinition name)
                           (fdefinition s)))))
         :finally (progn
-                   (setf (fdefinition 'bcl::re.apropos-list)
+                   (setf (fdefinition 're.apropos-list)
                          (fdefinition 'cl-ppcre:regex-apropos-list))
-                   (setf (fdefinition 'bcl::re.apropos)
+                   (setf (fdefinition 're.apropos)
                          (fdefinition 'cl-ppcre:regex-apropos))
-                   (setf (fdefinition 'bcl::re.replace)
+                   (setf (fdefinition 're.replace)
                          (fdefinition 'cl-ppcre:regex-replace))
-                   (setf (fdefinition 'bcl::re.replace-all)
+                   (setf (fdefinition 're.replace-all)
                          (fdefinition 'cl-ppcre:regex-replace-all))))
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
   )
 
+(declare (inline fstring))
+(defun fstring (control &rest args)
+  (apply #'format nil control args))
+
+(defun fpathname (control &rest args)
+  (pathname (apply #'fstring control args)))
+
+(defun openi (file &key (element-type 'cl:character) (external-format :utf-8))
+  (open file :direction :input
+        :element-type element-type
+        :external-format external-format))
+
+(defun openo (file &key (element-type 'cl:character) (external-format :utf-8))
+  (open file
+        :direction :output
+        :element-type element-type
+        :external-format external-format
+        :if-exists :supersede
+        :if-does-not-exist :create))
+
+(defun opena (file &key (element-type 'cl:character) (external-format :utf-8))
+  (open file
+        :direction :output
+        :element-type element-type
+        :external-format external-format
+        :if-exists :append
+        :if-does-not-exist :create))
+
+(defmacro in-syntax (readtable)
+  `(eval-always
+     (setq *readtable* ,readtable)))
 
 
+(defvar *bcl* (copy-readtable nil))
 
+(eval-always
+  (let ((*readtable* *bcl*))
+    (set-dispatch-macro-character #\# #\Z
+                                  #'series::series-reader)
+    (set-dispatch-macro-character #\# #\M
+                                  #'series::abbreviated-map-fn-reader)
+    (set-dispatch-macro-character
+     #\# #\@
+     (lambda (srm chr arg)
+       (declare (ignore chr arg))
+       `(eval-always
+          ,(read srm T nil T))))))
