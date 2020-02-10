@@ -1398,17 +1398,16 @@
      (setq *readtable* ,readtable)))
 
 
-(defvar *bcl* (copy-readtable nil))
-
 (eval-always
-  (let ((*readtable* *bcl*))
-    (set-dispatch-macro-character #\# #\Z
-                                  #'series::series-reader)
-    (set-dispatch-macro-character #\# #\M
-                                  #'series::abbreviated-map-fn-reader)
-    (set-dispatch-macro-character
-     #\# #\@
-     (lambda (srm chr arg)
-       (declare (ignore chr arg))
-       `(eval-always
-          ,(read srm T nil T))))))
+ (defvar *bcl* (copy-readtable nil))
+ (let ((*readtable* *bcl*))
+   (set-dispatch-macro-character #\# #\Z
+                                 #'series::series-reader)
+   (set-dispatch-macro-character #\# #\M
+                                 #'series::abbreviated-map-fn-reader)
+   (set-dispatch-macro-character
+    #\# #\@
+    (lambda (srm chr arg)
+      (declare (ignore chr arg))
+      `(eval-always
+        ,(read srm T nil T))))))
