@@ -3,10 +3,14 @@
 (cl:defpackage #:bcl.internal
   (:use #:cl #:ppcre))
 
+
 (cl:in-package #:bcl.internal)
 
-'(loop :for s :being :the :external-symbols :of :series
+
+#++
+(loop :for s :being :the :external-symbols :of :series
       :collect (make-symbol (string s)))
+
 
 (defpackage #:bcl
   (:use #:c2cl #:series)
@@ -24,7 +28,9 @@
    #:let
    #:get
    #:put
-   #:prop)
+   #:prop
+   #:then
+   #:else)
   (:export 
    #:<arithmetic-error>
    #:<array>
@@ -1312,13 +1318,17 @@
    #:fstring
    #:fpathname))
 
+
 (cl:in-package #:bcl)
+
 
 (defmacro ^ ((&rest args) &body body)
   `(function (lambda (,@args) ,@body)))
 
+
 (defmacro fun ((&rest args) &body body)
   `(function (lambda (,@args) ,@body)))
+
 
 (defmacro eval-always (&body body)
   `(eval-when (:compile-toplevel :load-toplevel :execute)
@@ -1365,17 +1375,23 @@
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
   )
 
+
 (declare (inline fstring))
+
+
 (defun fstring (control &rest args)
   (apply #'format nil control args))
 
+
 (defun fpathname (control &rest args)
   (pathname (apply #'fstring control args)))
+
 
 (defun openi (file &key (element-type 'cl:character) (external-format :utf-8))
   (open file :direction :input
         :element-type element-type
         :external-format external-format))
+
 
 (defun openo (file &key (element-type 'cl:character) (external-format :utf-8))
   (open file
@@ -1385,6 +1401,7 @@
         :if-exists :supersede
         :if-does-not-exist :create))
 
+
 (defun opena (file &key (element-type 'cl:character) (external-format :utf-8))
   (open file
         :direction :output
@@ -1393,14 +1410,14 @@
         :if-exists :append
         :if-does-not-exist :create))
 
+
 (defmacro in-syntax (readtable)
   `(eval-always
      (setq *readtable* ,readtable)))
 
 
-(defvar *bcl* (copy-readtable nil))
-
 (eval-always
+ (defvar *bcl* (copy-readtable nil))
   (let ((*readtable* *bcl*))
     (set-dispatch-macro-character #\# #\Z
                                   #'series::series-reader)
@@ -1412,3 +1429,14 @@
        (declare (ignore chr arg))
        `(eval-always
           ,(read srm T nil T))))))
+
+
+(defmacro then (&body body)
+  `(progn . ,body))
+
+
+(defmacro else (&body body)
+  `(progn . ,body))
+
+
+;;; *EOF*
