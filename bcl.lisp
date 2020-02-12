@@ -298,18 +298,7 @@
    #:byte
    #:byte-position
    #:byte-size
-   #:caaaar
-   #:caaadr
-   #:caaar
-   #:caadar
-   #:caaddr
-   #:caadr
    #:caar
-   #:cadaar
-   #:cadadr
-   #:cadar
-   #:caddar
-   #:cadddr
    #:caddr
    #:cadr
    #:call-arguments-limit
@@ -319,19 +308,6 @@
    #:case
    #:catch
    #:ccase
-   #:cdaaar
-   #:cdaadr
-   #:cdaar
-   #:cdadar
-   #:cdaddr
-   #:cdadr
-   #:cdar
-   #:cddaar
-   #:cddadr
-   #:cddar
-   #:cdddar
-   #:cddddr
-   #:cdddr
    #:cddr
    #:cdr
    #:ceiling
