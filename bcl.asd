@@ -8,5 +8,6 @@
   :serial t
   :depends-on (#:cl-ppcre #:series #:closer-mop #:nil-compat)
   :components ((:file "bcl")
+               (:file "with")
                (:file "get")
                (:file "bcl-user")))

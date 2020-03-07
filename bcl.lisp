@@ -11,11 +11,27 @@
 (loop :for s :being :the :external-symbols :of :series
       :collect (make-symbol (string s)))
 
+(regex-apropos-list "w/" :bcl.internal)
 
+ 
 (defpackage #:bcl
   (:use #:c2cl #:series)
   (:shadow #:get #:set)
   (:shadowing-import-from #:nil #:let)
+  (:export
+   w/infile
+   w/package-iterator
+   w/standard-io-syntax
+   w/compilation-unit
+   w/outstring
+   w/instring
+   w/accessors
+   w/hash-table-iterator
+   w/slots
+   w/outfile
+   w/condition-restarts
+   w/stream
+   w/simple-restart)
   (:export
    *bcl*
    bcl-syntax
@@ -1353,7 +1369,7 @@
   )
 
 
-(declare (inline fstring))
+(declaim (inline fstring))
 
 
 (defun fstring (control &rest args)
