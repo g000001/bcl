@@ -1412,6 +1412,12 @@
 (eval-always
   (defvar *bcl* (copy-readtable nil))
   (let ((*readtable* *bcl*))
+    (make-dispatch-macro-character #\! T)
+    (set-dispatch-macro-character
+     #\! #\(
+     (lambda (srm chr arg)
+       (declare (ignore chr arg))
+       (cons 'cl:funcall (read-delimited-list #\) srm T))))
     (set-dispatch-macro-character #\# #\Z
                                   #'series::series-reader)
     (set-dispatch-macro-character #\# #\M
