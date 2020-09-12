@@ -1412,19 +1412,54 @@
 
 
 (eval-always
-  (defvar *bcl* (copy-readtable nil))
-  (let ((*readtable* *bcl*))
-    (set-dispatch-macro-character #\# #\Z
-                                  #'series::series-reader)
-    (set-dispatch-macro-character #\# #\M
-                                  #'series::abbreviated-map-fn-reader)
-    (set-dispatch-macro-character
-     #\# #\@
-     (lambda (srm chr arg)
-       (declare (ignore chr arg))
-       `(eval-always
-          ,(read srm T nil T)))))
-  (defconstant bcl-syntax *bcl*))
+ (defun read-raw-string (srm chr arg)
+   (declare (ignore chr arg))
+   (with-output-to-string (out)
+     (loop 
+      (let ((c (read-char srm T nil T)))
+        (if (eql #\" c)
+            (if (eql #\" (peek-char nil srm T nil T))
+                (progn
+                  (write-char #\" out)
+                  (read-char srm T nil T))
+                (return))
+            (write-char c out))))))
+
+
+ (defun concat-string (srm chr arg)
+   (declare (ignore arg))
+   (with-output-to-string (out)
+     (unread-char chr srm)
+     (loop 
+      (let ((s (read srm T nil T)))
+        (write-string s out)
+        (unless (eql #\" (peek-char T srm T nil T))
+          (return))))))
+
+
+ (defvar *bcl* (copy-readtable nil))
+
+
+ (let ((*readtable* *bcl*))
+   (make-dispatch-macro-character #\! T)
+   (set-dispatch-macro-character #\! #\" #'read-raw-string)
+   (set-dispatch-macro-character #\# #\" #'concat-string)
+   (set-dispatch-macro-character
+    #\! #\(
+    (lambda (srm chr arg)
+      (declare (ignore chr arg))
+      (cons 'cl:funcall (read-delimited-list #\) srm T))))
+   (set-dispatch-macro-character #\# #\Z
+                                 #'series::series-reader)
+   (set-dispatch-macro-character #\# #\M
+                                 #'series::abbreviated-map-fn-reader)
+   (set-dispatch-macro-character
+    #\# #\@
+    (lambda (srm chr arg)
+      (declare (ignore chr arg))
+      `(eval-always
+        ,(read srm T nil T)))))
+ (defconstant bcl-syntax *bcl*))
 
 
 (defmacro then (&body body)
