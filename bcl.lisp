@@ -11,13 +11,15 @@
 (loop :for s :being :the :external-symbols :of :series
       :collect (make-symbol (string s)))
 
-(regex-apropos-list "w/" :bcl.internal)
 
- 
 (defpackage #:bcl
   (:use #:c2cl #:series)
   (:shadow #:get #:set)
   (:shadowing-import-from #:nil #:let)
+  (:export
+   ;; seq.lisp
+   mem
+   fin)
   (:export
    w/infile
    w/package-iterator

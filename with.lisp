@@ -29,11 +29,11 @@
 
 ;;; with-open-file
 (defmacro bcl:w/infile ((var file) &body body)
-  `(bcl:w/stream (,var (openi ,file)) ,@body))
+  `(bcl:w/stream (,var (bcl:openi ,file)) ,@body))
 
 
 (defmacro bcl:w/outfile ((var file) &body body)
-  `(bcl:w/stream (,var (openo ,file)) ,@body))
+  `(bcl:w/stream (,var (bcl:openo ,file)) ,@body))
 
 
 ;;; with-open-stream
