@@ -34,6 +34,7 @@
    w/condition-restarts
    w/stream
    w/simple-restart)
+  (:export for)
   (:export
    *bcl*
    bcl-syntax
@@ -1469,5 +1470,22 @@
 (defmacro else (&body body)
   `(progn . ,body))
 
+
+(defmacro for (&rest body)
+  `(loop 
+    ,@(reduce (lambda (res b)
+                (append res (->loop-clause b)))
+              body
+              :initial-value nil)))
+
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun ->loop-clause (xpr)
+    (case (find (car xpr) '(let) :test #'string-equal)
+      (let (destructuring-bind (let &rest args)
+                               xpr
+             (declare (ignore let))
+             `(for ,@args)))
+      (otherwise xpr))))
 
 ;;; *EOF*
