@@ -70,8 +70,7 @@
   (setf (find-class 'string-output-stream)
         (find-class
          #+lispworks 'sys::string-output-stream
-         #+sbcl 'sb-impl::character-string-ostream)))
-
+         #+sbcl 'sb-impl::string-output-stream)))
 
 (defmethod get ((obj string-output-stream) (key (eql 'string))
                 &optional default)

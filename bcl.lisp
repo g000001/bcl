@@ -1304,7 +1304,8 @@
    #:scan
    #:*suppress-series-warnings*
    #:mask
-   #:chunk)
+   #:chunk
+   #:Zdefun)
   (:export
    ;; utils
    #:in-syntax
@@ -1459,7 +1460,14 @@
     (lambda (srm chr arg)
       (declare (ignore chr arg))
       `(eval-always
-        ,(read srm T nil T)))))
+        ,(read srm T nil T))))
+   (set-dispatch-macro-character
+    #\# (character "")
+    (lambda (srm chr arg)
+      (declare (ignore chr arg))
+      (cons 'eval-always
+            (read-delimited-list (character "") srm T)))))
+            
  (defconstant bcl-syntax *bcl*))
 
 
@@ -1487,5 +1495,11 @@
              (declare (ignore let))
              `(for ,@args)))
       (otherwise xpr))))
+
+(defmacro Zdefun (name (&rest args) &body body)
+  `(series::defun ,name (,@args)
+     (declare (series:optimizable-series-function))
+     ,@body))
+
 
 ;;; *EOF*
