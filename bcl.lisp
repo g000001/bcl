@@ -16,6 +16,7 @@
   (:use #:c2cl #:series)
   (:shadow #:get #:set)
   (:shadowing-import-from #:nil #:let)
+  (:export for)
   (:export
    ;; seq.lisp
    mem
