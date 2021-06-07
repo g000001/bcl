@@ -269,7 +269,6 @@
    assert
    assoc
    assoc-if
-   assoc-if-not
    atan
    atanh
    atom
@@ -423,7 +422,6 @@
    cosh
    count
    count-if
-   count-if-not
    ctypecase
    debug
    decf
@@ -454,7 +452,6 @@
    delete-duplicates
    delete-file
    delete-if
-   delete-if-not
    delete-package
    denominator
    deposit-field
@@ -543,7 +540,6 @@
    find-all-symbols
    find-class
    find-if
-   find-if-not
    find-method
    find-method-combination
    find-package
@@ -748,7 +744,6 @@
    max
    member
    member-if
-   member-if-not
    merge
    merge-pathnames
    metaobject
@@ -805,10 +800,8 @@
    nsublis
    nsubst
    nsubst-if
-   nsubst-if-not
    nsubstitute
    nsubstitute-if
-   nsubstitute-if-not
    nth
    nth-value
    nthcdr
@@ -853,7 +846,6 @@
    pop
    position
    position-if
-   position-if-not
    pprint
    pprint-dispatch
    pprint-exit-if-list-exhausted
@@ -894,7 +886,6 @@
    random-state-p
    rassoc
    rassoc-if
-   rassoc-if-not
    ratio
    rational
    rationalize
@@ -927,7 +918,7 @@
    remove-direct-subclass
    remove-duplicates
    remove-if
-   remove-if-not
+   keep-if
    remove-method
    remprop
    rename-file
@@ -1085,10 +1076,8 @@
    subsetp
    subst
    subst-if
-   subst-if-not
    substitute
    substitute-if
-   substitute-if-not
    subtypep
    svref
    sxhash
@@ -1501,6 +1490,11 @@
   `(series::defun ,name (,@args)
      (declare (series:optimizable-series-function))
      ,@body))
+
+
+(eval-always
+  (setf (fdefinition 'bcl::keep-if)
+        (fdefinition 'cl:remove-if-not)))
 
 
 ;;; *EOF*
