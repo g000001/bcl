@@ -16,6 +16,7 @@
   (:use #:c2cl #:series)
   (:shadow #:get #:set)
   (:shadowing-import-from #:nil #:let)
+  (:export name)
   (:export for)
   (:export
    ;; seq.lisp
@@ -262,7 +263,6 @@
    array-row-major-index
    array-total-size
    array-total-size-limit
-   arrayp
    ash
    asin
    asinh
@@ -287,7 +287,6 @@
    bit-orc1
    bit-orc2
    bit-vector
-   bit-vector-p
    bit-xor
    block
    boole
@@ -355,7 +354,6 @@
    char>
    char>=
    character
-   characterp
    check-type
    cis
    class
@@ -382,12 +380,10 @@
    compile-file
    compile-file-pathname
    compiled-function
-   compiled-function-p
    compiler-macro
    compiler-macro-function
    complement
    complex
-   complexp
    compute-applicable-methods
    compute-applicable-methods-using-classes
    compute-class-precedence-list
@@ -405,7 +401,6 @@
    condition
    conjugate
    cons
-   consp
    constantly
    constantp
    continue
@@ -559,7 +554,6 @@
    floating-point-invalid-operation
    floating-point-overflow
    floating-point-underflow
-   floatp
    floor
    fmakunbound
    force-output
@@ -578,7 +572,6 @@
    function
    function-keywords
    function-lambda-expression
-   functionp
    gcd
    generic-function
    generic-function-argument-precedence-order
@@ -598,7 +591,6 @@
    handler-case
    hash-table
    hash-table-count
-   hash-table-p
    hash-table-rehash-size
    hash-table-rehash-threshold
    hash-table-size
@@ -620,7 +612,6 @@
    integer
    integer-decode-float
    integer-length
-   integerp
    interactive-stream-p
    intern
    intern-eql-specializer
@@ -633,7 +624,6 @@
    invoke-restart-interactively
    isqrt
    keyword
-   keywordp
    labels
    lambda
    lambda-list-keywords
@@ -669,7 +659,6 @@
    list-all-packages
    list-length
    listen
-   listp
    load
    load-logical-pathname-translations
    load-time-value
@@ -807,7 +796,6 @@
    nthcdr
    null
    number
-   numberp
    numerator
    nunion
    oddp
@@ -825,7 +813,6 @@
    package-shadowing-symbols
    package-use-list
    package-used-by-list
-   packagep
    pairlis
    parse-error
    parse-integer
@@ -838,7 +825,6 @@
    pathname-name
    pathname-type
    pathname-version
-   pathnamep
    peek-char
    phase
    pi
@@ -883,13 +869,11 @@
    quote
    random
    random-state
-   random-state-p
    rassoc
    rassoc-if
    ratio
    rational
    rationalize
-   rationalp
    read
    read-byte
    read-char
@@ -903,9 +887,7 @@
    reader-method-class
    readtable
    readtable-case
-   readtablep
    real
-   realp
    realpart
    reduce
    reinitialize-instance
@@ -972,16 +954,13 @@
    simple-array
    simple-base-string
    simple-bit-vector
-   simple-bit-vector-p
    simple-condition
    simple-condition-format-arguments
    simple-condition-format-control
    simple-error
    simple-string
-   simple-string-p
    simple-type-error
    simple-vector
-   simple-vector-p
    simple-warning
    sin
    single-float
@@ -1025,7 +1004,6 @@
    standard
    standard-accessor-method
    standard-char
-   standard-char-p
    standard-class
    standard-direct-slot-definition
    standard-effective-slot-definition
@@ -1044,7 +1022,6 @@
    stream-error
    stream-error-stream
    stream-external-format
-   streamp
    string
    string-capitalize
    string-downcase
@@ -1065,7 +1042,6 @@
    string=
    string>
    string>=
-   stringp
    structure
    structure-class
    structure-object
@@ -1088,7 +1064,6 @@
    symbol-package
    symbol-plist
    symbol-value
-   symbolp
    synonym-stream
    synonym-stream-symbol
    t
@@ -1148,7 +1123,6 @@
    vector-pop
    vector-push
    vector-push-extend
-   vectorp
    warn
    warn-on-defmethod-without-generic-function
    warning
@@ -1495,6 +1469,18 @@
 (eval-always
   (setf (fdefinition 'bcl::keep-if)
         (fdefinition 'cl:remove-if-not)))
+
+
+(defgeneric bcl::name (obj)
+  (:method ((obj cell-error)) (cell-error-name obj))
+  (:method ((obj character)) (char-name obj))
+  (:method ((obj class)) (class-name obj))
+  (:method ((obj generic-function)) (generic-function-name obj))
+  (:method ((obj package)) (package-name obj))
+  (:method ((obj restart)) (restart-name obj))
+  (:method ((obj slot-definition)) (slot-definition-name obj))
+  (:method ((obj symbol)) (symbol-name obj)))
+
 
 
 ;;; *EOF*
