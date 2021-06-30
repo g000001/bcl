@@ -33,18 +33,22 @@
 
 
 ;; plist
-(defmethod get ((obj list) key &optional default)
+(defmethod get ((obj cons) key &optional default)
   (getf obj key default))
 
 
-(defmethod get ((obj list) (key list) &optional default)
+(defmethod get ((obj cons) (key list) &optional default)
   (declare (ignore default))
   (get-properties obj key))
 
 
-(defmethod (setf get) (val (obj list) key &optional default)
-  (setf (getf obj key default) val))
-
+(defmethod (setf get) (val (obj cons) key &optional default)
+  (if (find key obj)
+      (setf (getf obj key default) val)
+      (let ((ans (append obj (list key val))))
+        (setf (car obj) (car ans))
+        (setf (cdr obj) (cdr ans))
+        obj)))
 
 ;; readtable
 (defmethod get ((obj readtable) key &optional non-terminating-p)
