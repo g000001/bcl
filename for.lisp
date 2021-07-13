@@ -1,14 +1,5 @@
 (cl:in-package bcl)
 
-
-(defmacro for (&rest body)
-  `(loop 
-    ,@(reduce (lambda (res b)
-                (append res (->loop-clause b)))
-              body
-              :initial-value nil)))
-
-
 #||
 (for (let x := ...))
 (bcl:for (each x (the list xs)))
@@ -29,3 +20,11 @@
                 ((cl:vector cl:string) `(for ,var :across ,sequence))
                 ((cl:list) `(for ,var :in ,sequence)))))
       (otherwise xpr))))
+
+
+(defmacro for (&rest body)
+  `(loop 
+    ,@(reduce (lambda (res b)
+                (append res (->loop-clause b)))
+              body
+              :initial-value nil)))

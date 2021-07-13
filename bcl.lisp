@@ -14,8 +14,8 @@
 
 (defpackage #:bcl
   (:use #:c2cl #:series)
-  (:shadow #:get #:set)
   (:shadowing-import-from #:nil #:let)
+  (:export ~ ref)
   (:export name)
   (:export for)
   (:export
@@ -40,7 +40,6 @@
   (:export
    *bcl*
    bcl-syntax
-   set
    loop
    a
    isa
@@ -48,7 +47,6 @@
    ^
    fun
    let
-   get
    put
    prop
    then
