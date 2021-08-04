@@ -15,6 +15,7 @@
 (defpackage #:bcl
   (:use #:c2cl #:series)
   (:shadowing-import-from #:nil #:let)
+  (:export cset csetq)
   (:export ~ ref)
   (:export name)
   (:export for)
@@ -1480,5 +1481,15 @@
   (:method ((obj symbol)) (symbol-name obj)))
 
 
+(defvar .csetq-unbound.)
+(defmacro bcl:csetq (var val)
+  `(progn 
+     (define-symbol-macro ,var .csetq-unbound.)
+     (setq ,var ,val)))
+
+
+(defmacro bcl:cset (var val)
+  `(progn 
+     (setf (symbol-value ,var) ,val)))
 
 ;;; *EOF*
