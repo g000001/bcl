@@ -1505,7 +1505,7 @@
   `(cl:make-instance ',name ,@args))
 
 
-(defmacro bcl:→ (&rest args)
+(defmacro bcl:← (&rest args)
   `(cl:setf ,@args))
 
 ;;; *EOF*
