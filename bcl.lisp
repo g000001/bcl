@@ -1276,7 +1276,22 @@
    #:openo
    #:opena
    #:fstring
-   #:fpathname))
+   #:fpathname)
+  (:export
+   ;; utils
+   #:in-syntax
+   #:openi
+   #:openo
+   #:opena
+   #:fstring
+   #:fpathname)
+  (:export 
+   #:classq
+   #:makeq
+   #:←)
+  (:export 
+   #:object-named
+   #:$))
 
 
 (cl:in-package #:bcl)
@@ -1491,5 +1506,26 @@
 (defmacro bcl:cset (var val)
   `(progn 
      (setf (symbol-value ,var) ,val)))
+
+
+(defmacro classq (name &rest args)
+  `(find-class ',name ,@args))
+
+
+(defmacro makeq (name &rest args)
+  `(make-instance ',name ,@args))
+
+
+(defmacro ← (&rest args)
+  `(setf ,@args))
+
+
+(defun object-named (name)
+  (or (find-class name (not :errorp))
+      ))
+
+(defmacro $ (name)
+  `(object-named ',name))
+
 
 ;;; *EOF*
