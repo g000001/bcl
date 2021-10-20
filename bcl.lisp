@@ -1286,12 +1286,11 @@
    #:fstring
    #:fpathname)
   (:export 
-   #:classq
-   #:makeq
-   #:←)
-  (:export 
    #:object-named
-   #:$))
+   #:$
+   #:←
+   #:classq
+   #:makeq))
 
 
 (cl:in-package #:bcl)
@@ -1474,6 +1473,7 @@
              `(for ,@args)))
       (otherwise xpr))))
 
+
 (defmacro Zdefun (name (&rest args) &body body)
   `(series::defun ,name (,@args)
      (declare (series:optimizable-series-function))
@@ -1497,6 +1497,8 @@
 
 
 (defvar .csetq-unbound.)
+
+
 (defmacro bcl:csetq (var val)
   `(progn 
      (define-symbol-macro ,var .csetq-unbound.)
@@ -1508,23 +1510,24 @@
      (setf (symbol-value ,var) ,val)))
 
 
-(defmacro classq (name &rest args)
+(defmacro bcl:classq (name &rest args)
   `(find-class ',name ,@args))
 
 
-(defmacro makeq (name &rest args)
+(defmacro bcl:makeq (name &rest args)
   `(make-instance ',name ,@args))
 
 
-(defmacro ← (&rest args)
+(defmacro bcl:← (&rest args)
   `(setf ,@args))
 
 
-(defun object-named (name)
+(defun bcl:object-named (name)
   (or (find-class name (not :errorp))
       ))
 
-(defmacro $ (name)
+
+(defmacro bcl:$ (name)
   `(object-named ',name))
 
 
