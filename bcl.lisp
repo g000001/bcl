@@ -15,6 +15,7 @@
 (defpackage #:bcl
   (:use #:c2cl #:series)
   (:shadowing-import-from #:nil #:let)
+  (:shadow #:or)
   (:export cset csetq)
   (:export ~ ref)
   (:export name)

@@ -50,6 +50,7 @@
         (setf (cdr obj) (cdr ans))
         obj)))
 
+
 ;; readtable
 (defmethod ref ((obj readtable) key &optional non-terminating-p)
   (declare (ignore non-terminating-p))
@@ -75,6 +76,7 @@
         (find-class
          #+lispworks 'sys::string-output-stream
          #+sbcl 'sb-impl::string-output-stream)))
+
 
 (defmethod ref ((obj string-output-stream) (key (eql 'string))
                 &optional default)
@@ -122,6 +124,16 @@
             (list 'bcl:ref acc x))
           slot-names
           :initial-value obj))
+
+
+(defmacro or (&rest test-forms)
+  `(cl:or ,@test-forms))
+
+
+(define-setf-expander or (place default &environment env)
+  (multiple-value-bind (temps subforms stores setterform getterform)
+                       (get-setf-expansion place env)
+    (values temps subforms stores setterform `(,@getterform ,default))))
 
 
 ;;; *EOF*
