@@ -15,7 +15,7 @@
 
 ;; standard-object
 (defmethod ref ((obj standard-object) key &optional default)
-  (or (slot-value obj key) default))
+  (cl:or (slot-value obj key) default))
 
 
 (defmethod (setf ref) (val (obj standard-object) key
@@ -126,7 +126,7 @@
           :initial-value obj))
 
 
-(defmacro or (&rest test-forms)
+(defmacro bcl:or (&rest test-forms)
   `(cl:or ,@test-forms))
 
 
