@@ -21,6 +21,7 @@
   (:export ~ ref)
   (:export name)
   (:export for)
+  (:export def)
   (:export
    ;; seq.lisp
    mem
@@ -1531,6 +1532,25 @@
 
 (defmacro bcl:$ (name)
   `(object-named ',name))
+
+
+(defmacro bcl:def (name (&rest args) 
+                        (&rest values)
+                        (&body in)
+                        (&body out)
+                        &body main)
+  (check-type (car in) (eql :in))
+  (check-type (car values) (eql values))
+  (check-type (car out) (eql :out))
+  (let ((in (cdr in))
+        (out (cdr out))
+        (result-vars (cdr values)))
+    `(progn
+       (defgeneric ,name (,@args)
+         (:method-combination zrdbc:dbc))
+       ,(and in `(defmethod ,name :in (,@args) ,@in))
+       (defmethod ,name (,@args) ,@main)
+       ,(and out `(defmethod ,name :out (,@args) (lambda (,@result-vars) ,@out))))))
 
 
 ;;; *EOF*

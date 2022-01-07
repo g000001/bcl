@@ -6,7 +6,7 @@
   :license  "MIT"
   :version "0.0.2"
   :serial t
-  :depends-on (#:cl-ppcre #:series #:closer-mop #:nil-compat)
+  :depends-on (#:cl-ppcre #:series #:closer-mop #:nil-compat #:zrdbc)
   :components ((:file "bcl")
                (:file "with")
                (:file "get")
