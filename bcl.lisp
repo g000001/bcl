@@ -1299,6 +1299,10 @@
 (cl:in-package #:bcl)
 
 
+(deftype bcl:or (&rest args)
+  `(cl:or ,@args))
+
+
 (defmacro ^ ((&rest args) &body body)
   `(function (lambda (,@args) ,@body)))
 
