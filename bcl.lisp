@@ -22,6 +22,7 @@
   (:export name)
   (:export for)
   (:export def)
+  (:export and-let*)
   (:export
    ;; seq.lisp
    mem
