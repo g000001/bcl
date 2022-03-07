@@ -15,6 +15,10 @@
 (defpackage #:bcl
   (:use #:c2cl #:series)
   (:shadowing-import-from #:nil #:let)
+  ;;
+  (:shadow dolist dotimes map)
+  (:export dolist dotimes doseq dovec)
+  ;;
   (:shadow #:or)
   (:export or)
   (:export cset csetq)
@@ -1530,8 +1534,8 @@
 
 
 (defun bcl:object-named (name)
-  (or (find-class name (not :errorp))
-      ))
+  (cl:or (find-class name (not :errorp))
+         ))
 
 
 (defmacro bcl:$ (name)

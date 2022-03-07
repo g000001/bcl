@@ -10,6 +10,6 @@
   :components ((:file "bcl")
                (:file "with")
                (:file "get")
-               (:file "for")
+               (:file "iteration")
                (:file "regex")
                (:file "bcl-user")))
