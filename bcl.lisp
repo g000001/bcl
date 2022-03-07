@@ -13,7 +13,7 @@
 
 
 (defpackage #:bcl
-  (:use #:c2cl #:series)
+  (:use #:c2cl #:series #:srfi-2 #:zrdbc)
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow dolist dotimes map)
@@ -26,6 +26,7 @@
   (:export name)
   (:export for)
   (:export def)
+  (:export and-let*)
   (:export
    ;; seq.lisp
    mem
@@ -1542,7 +1543,7 @@
   `(object-named ',name))
 
 
-(defmacro bcl:def (name (&rest args) 
+#|(defmacro bcl:def (name (&rest args) 
                         (&rest values)
                         (&body in)
                         (&body out)
@@ -1558,7 +1559,7 @@
          (:method-combination zrdbc:dbc))
        ,(and in `(defmethod ,name :in (,@args) ,@in))
        (defmethod ,name (,@args) ,@main)
-       ,(and out `(defmethod ,name :out (,@args) (lambda (,@result-vars) ,@out))))))
+       ,(and out `(defmethod ,name :out (,@args) (lambda (,@result-vars) ,@out))))))|#
 
 
 ;;; *EOF*
