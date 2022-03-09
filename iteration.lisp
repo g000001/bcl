@@ -34,8 +34,11 @@
 (defmacro bcl::doseries ((var (the type col) &optional result-form) &body body)
   (declare (ignore the))
   `(progn
-     (iterate ((,var (scan ',type ,col)))
-       ,@body)
+     ,(case type
+        (series
+         `(iterate ((,var ,col)) ,@body))
+        (otherwise
+         `(iterate ((,var (scan ',type ,col))) ,@body)))
      (let ((,var nil)) ,result-form)))
 
 (defmacro bcl::dolist ((var list &optional result-form) &body body)
@@ -45,7 +48,10 @@
   `(bcl::doseries (,var (the vector ,col) ,result-form) ,@body))
 
 (defmacro bcl::doseq ((var seq &optional result-form) &body body)
-  `(bcl::doseries (,var (the T ,seq) ,result-form) ,@body))
+  (typecase seq
+    ((cons (eql the) (cons (eql series) *))
+     `(bcl::doseries (,var (the series ,seq) ,result-form) ,@body))
+    (T `(bcl::doseries (,var (the T ,seq) ,result-form) ,@body))))
 
 (defmacro bcl::skip () ''#:skip)
 
