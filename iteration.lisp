@@ -42,10 +42,10 @@
      (let ((,var nil)) ,result-form)))
 
 (defmacro bcl::dolist ((var list &optional result-form) &body body)
-  `(bcl::doseries (,var (the list ,col) ,result-form) ,@body))
+  `(bcl::doseries (,var (the list ,list) ,result-form) ,@body))
 
 (defmacro bcl::dovector ((var vec &optional result-form) &body body)
-  `(bcl::doseries (,var (the vector ,col) ,result-form) ,@body))
+  `(bcl::doseries (,var (the vector ,vec) ,result-form) ,@body))
 
 (defmacro bcl::doseq ((var seq &optional result-form) &body body)
   (typecase seq
