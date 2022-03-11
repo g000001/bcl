@@ -41,6 +41,12 @@
          `(iterate ((,var (scan ',type ,col))) ,@body)))
      (let ((,var nil)) ,result-form)))
 
+(defmacro bcl::dorange ((var (&rest range-expr) &optional result-form) &body body)
+  `(bcl::doseries (,var (the series (scan-range ,@range-expr)) ,result-form) ,@body))
+
+(defmacro bcl::dotimes ((var count &optional result-form) &body body)
+  `(bcl::dorange (,var (:upto ,count) ,result-form) ,@body))
+
 (defmacro bcl::dolist ((var list &optional result-form) &body body)
   `(bcl::doseries (,var (the list ,list) ,result-form) ,@body))
 
