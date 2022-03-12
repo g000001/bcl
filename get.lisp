@@ -74,6 +74,7 @@
 (eval-always
   (setf (find-class 'string-output-stream)
         (find-class
+         #+allegro 'excl::string-output-stream
          #+lispworks 'sys::string-output-stream
          #+sbcl 'sb-impl::string-output-stream)))
 
