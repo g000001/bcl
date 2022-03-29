@@ -11,9 +11,10 @@
 (loop :for s :being :the :external-symbols :of :series
       :collect (make-symbol (string s)))
 
-
 (defpackage #:bcl
-  (:use #:c2cl #:series #:srfi-2 #:zrdbc)
+  (:use #:c2cl #:zrseries #:srfi-2 #:zrdbc)
+  (:shadowing-import-from #:cl
+                          #:let* #:multiple-value-bind #:funcall #:defun)
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow dolist dotimes map)
@@ -31,6 +32,13 @@
    ;; seq.lisp
    mem
    fin)
+  ;; LetS
+  (:export
+   defunS Ealist Efile Elist Elist* Eplist Erange Esublists
+   Evector Fgreater Fpositive Fselect Glist Grange Gsequence Gsublist LetS*
+   mapS
+   Rappend Rbag Rcount Reqset Rfile Rignore Rlast Rlist Rnconc Rset Rsum Rvector
+   Tselect)
   (:export
    w/infile
    w/package-iterator
@@ -1441,9 +1449,9 @@
       (declare (ignore chr arg))
       (cons 'cl:funcall (read-delimited-list #\) srm T))))
    (set-dispatch-macro-character #\# #\Z
-                                 #'series::series-reader)
+                                 #'zrseriesi::series-reader)
    (set-dispatch-macro-character #\# #\M
-                                 #'series::abbreviated-map-fn-reader)
+                                 #'zrseriesi::abbreviated-map-fn-reader)
    (set-dispatch-macro-character
     #\# #\@
     (lambda (srm chr arg)
