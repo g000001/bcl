@@ -8,7 +8,7 @@
 
 
 #++
-(loop :for s :being :the :external-symbols :of :series
+(loop :for s :being :the :external-symbols :of :zrseries
       :collect (make-symbol (string s)))
 
 (defpackage #:bcl
@@ -1495,8 +1495,8 @@
 
 
 (defmacro Zdefun (name (&rest args) &body body)
-  `(series::defun ,name (,@args)
-     (declare (series:optimizable-series-function))
+  `(zrseries:defun ,name (,@args)
+     (declare (zrseries:optimizable-series-function))
      ,@body))
 
 

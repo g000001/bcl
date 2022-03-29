@@ -36,7 +36,7 @@
 
 (defmacro bcl::doseries ((var (the type col) &optional result-form) &body body)
   (declare (ignore the))
-  `(progn
+  `(block nil
      ,(case type
         (series
          `(iterate ((,var ,col)) ,@body))
@@ -88,9 +88,9 @@
       (skip)))
 |#
 
-
 (defmacro map (result-type function first-sequence &rest more-sequences)
-  (case (eval result-type)
+  (case (and (isa (cadr result-type) 'symbol)
+             (cadr result-type))
     (series
      `(map-fn 'series
               ,function
