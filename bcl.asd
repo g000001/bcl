@@ -12,4 +12,5 @@
                (:file "get")
                (:file "iteration")
                (:file "regex")
+               (:file "threadding")
                (:file "bcl-user")))

@@ -18,6 +18,7 @@
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow dolist dotimes map)
+  (:export seq)
   (:export dolist dotimes doseq dovec dorange)
   ;;
   (:shadow #:or)
