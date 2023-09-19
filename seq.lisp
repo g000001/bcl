@@ -1,4 +1,4 @@
-(cl:in-package bcl)
+(bcl::in-sub-package)
 
 
 (declaim (inline mem))

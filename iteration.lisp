@@ -1,4 +1,4 @@
-(cl:in-package bcl)
+(bcl::in-sub-package)
 
 
 #||
@@ -52,11 +52,11 @@
 
 
 (defmacro bcl::dotimes ((var count &optional result-form) &body body)
-  `(bcl::dorange (,var (:upto ,count) ,result-form) ,@body))
+  `(cl:dotimes (,var ,count ,result-form) ,@body))
 
 
 (defmacro bcl::dolist ((var list &optional result-form) &body body)
-  `(bcl::doseries (,var (the list ,list) ,result-form) ,@body))
+  `(cl:dolist (,var (the list ,list) ,result-form) ,@body))
 
 
 (defmacro bcl::dovector ((var vec &optional result-form) &body body)

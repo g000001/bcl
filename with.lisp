@@ -1,4 +1,4 @@
-(cl:in-package bcl.internal)
+(cl:in-package bcl)
 
 
 ;;; with-accessors

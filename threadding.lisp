@@ -1,6 +1,6 @@
 ;;; -*- mode: Lisp; coding: utf-8  -*-
 
-(cl:in-package "CL-USER")
+(bcl::in-sub-package)
 
 
 (defun canonicalize-bindspec (bindspec)
@@ -34,7 +34,7 @@
                                               env
                                               (lambda (sub ctx env &aux (stop? nil))
                                                 (declare (ignore env ctx))
-                                                (if (symbolp sub)
+                                                (if (cl:symbolp sub)
                                                     (values (subst-symbol newsym sym sub) stop?)
                                                     (values sub stop?))))
           `(,let* ,bvl ,@body)))))

@@ -1,6 +1,6 @@
 ;;; -*- mode :Lisp -*-
 
-(cl:in-package bcl.internal)
+(bcl::in-sub-package)
 
 
 (bcl:in-syntax bcl:*bcl*)
@@ -36,8 +36,9 @@
                                                               (read-char in)
                                                               :case-fold)
                                                              (otherwise nil))))
-             (ppcre:create-scanner re :case-insensitive-mode case-fold-p))))
-    (set-dispatch-macro-character #\# #\/ #'read-/ bcl:*bcl*)))
+             `(ppcre:create-scanner ,re :case-insensitive-mode ,case-fold-p))))
+    (setf (~ bcl:*bcl* '(#\# #\/))
+          #'read-/)))
 
 
 ;;; *EOF*

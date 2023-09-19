@@ -4,10 +4,18 @@
   :description "Better CL"
   :author "CHIBA Masaomi <chiba.masaomi@gmail.com>"
   :license  "MIT"
-  :version "0.0.3"
+  :version "0.0.4"
   :serial t
-  :depends-on (#:cl-ppcre #:zrseries #:closer-mop #:nil-compat #:zrdbc #:srfi-2)
-  :components ((:file "bcl")
+  :depends-on (#:cl-ppcre
+               #:zrseries
+               #:closer-mop
+               #:nil-compat
+               #:zrdbc
+               #:srfi-2
+               #:st-json
+               #:trivia)
+  :components ((:file "package")
+               (:file "bcl")
                (:file "with")
                (:file "get")
                (:file "iteration")
