@@ -25,18 +25,20 @@
     `(let (,@(and bvlhd `((,(subst-symbol newsym sym (car bvlhd))
                            ,@(cdr bvlhd)))))
        ,(destructuring-bind (let* bvl . body)
-                            (walker:walk-form `(let* (,@(mapcar (lambda (v)
-                                                                  (destructuring-bind (var . val)
-                                                                                      v
-                                                                    `(,(subst-symbol newsym sym var) ,@val)))
-                                                                bvltl))
-                                                 ,@body)
-                                              env
-                                              (lambda (sub ctx env &aux (stop? nil))
-                                                (declare (ignore env ctx))
-                                                (if (cl:symbolp sub)
-                                                    (values (subst-symbol newsym sym sub) stop?)
-                                                    (values sub stop?))))
+                            (#+lispworks walker:walk-form
+                             #+allegro excl::walk-form 
+                             `(let* (,@(mapcar (lambda (v)
+                                                 (destructuring-bind (var . val)
+                                                     v
+                                                   `(,(subst-symbol newsym sym var) ,@val)))
+                                               bvltl))
+                                ,@body)
+                             env
+                             (lambda (sub ctx env &aux (stop? nil))
+                               (declare (ignore env ctx))
+                               (if (cl:symbolp sub)
+                                   (values (subst-symbol newsym sym sub) stop?)
+                                   (values sub stop?))))
           `(,let* ,bvl ,@body)))))
 
 
