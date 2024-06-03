@@ -4,14 +4,14 @@
 
 
 (cl:defpackage "BCL"
-  (:use #:c2cl #:zrseries #:srfi-2 #:zrdbc #:st-json)
+  (:use #:c2cl #:zrseries #:srfi-2 #:zrdbc #:st-json #:allegretto-regexp)
   (:intern #:in-sub-package)
   (:shadowing-import-from #:cl
    #:let* #:multiple-value-bind #:funcall #:defun)
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow dolist dotimes map)
-  (:export seq)
+  (:export seq ||)
   (:export dolist dotimes doseq dovec dorange)
   ;;
   (:shadow #:or)
@@ -1165,6 +1165,20 @@
    y-or-n-p
    yes-or-no-p
    zerop)
+  ;; allegretto-regexp
+  (:export
+   #:quote-re
+   #:split-re
+   #:native
+   #:re-lambda
+   #:replace-re
+   #:match-re
+   #:re-submatch
+   #:vm
+   #:parse-re
+   #:re-let
+   #:re-case
+   #:compile-re)
   ;; re
   (:export 
    #:re.apropos-list
@@ -1306,6 +1320,7 @@
    #:←
    #:classq
    #:makeq)
+  #+lispworks8
   (:export .
    #.(cl:loop :for s :being :the :external-symbols :of :trivia :collect s))
   (:export .
