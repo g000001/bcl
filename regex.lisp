@@ -10,7 +10,7 @@
   (let* ((prev nil)
          (ans (list nil))
          (tem ans))
-    (do ((chr (read-char input-stream nil input-stream recursivep)
+    (cl:do ((chr (read-char input-stream nil input-stream recursivep)
               (read-char input-stream nil input-stream recursivep)))
         ((or (eq chr input-stream)
              (and (eql chr endchar)

@@ -64,6 +64,10 @@
   )
 
 
+(bcl:eval-always
+  (setf (find-class 'bcl::json)
+        (find-class 'st-json::jso)))
+
 (declaim (inline fstring))
 
 

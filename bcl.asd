@@ -4,7 +4,7 @@
   :description "Better CL"
   :author "CHIBA Masaomi <chiba.masaomi@gmail.com>"
   :license  "MIT"
-  :version "0.0.5"
+  :version "0.0.6"
   :serial t
   :depends-on (#:cl-ppcre
                #:allegretto-regexp
@@ -22,4 +22,5 @@
                (:file "iteration")
                (:file "regex")
                (:file "threadding")
+               (:file "do")
                (:file "bcl-user")))

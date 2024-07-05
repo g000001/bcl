@@ -10,7 +10,8 @@
    #:let* #:multiple-value-bind #:funcall #:defun)
   (:shadowing-import-from #:nil #:let)
   ;;
-  (:shadow dolist dotimes map)
+  (:shadow do dolist dotimes map)
+  (:export times symbols all-symbols json)
   (:export seq ||)
   (:export dolist dotimes doseq dovec dorange)
   ;;
