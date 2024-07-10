@@ -11,8 +11,8 @@
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow do dolist dotimes map)
-  (:export times symbols all-symbols json)
-  (:export seq ||)
+  (:export times symbols all-symbols json range)
+  (:export seq || elt-or)
   (:export dolist dotimes doseq dovec dorange)
   ;;
   (:shadow #:or)

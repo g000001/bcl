@@ -53,6 +53,15 @@
               ,@body)
             ,(cadr varspec))))
 
+(defmethod expand-do ((type (eql 'bcl::range)) varspec body)
+  (destructuring-bind (var beg &optional end)
+                      varspec
+    `(collect-ignore
+      (map-fn T
+              (lambda (,(car varspec))
+                ,@body)
+              (bcl:scan-range :from ,beg :upto ,end)))))
+
 (defmethod expand-do ((type (eql 'sequence)) varspec body)
   `(bcl:collect-ignore
     (bcl:map-fn T

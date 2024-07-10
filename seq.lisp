@@ -1,6 +1,21 @@
 (bcl::in-sub-package)
 
 
+;;https://people.csail.mit.edu/jrb/goo/manual.46/goomanual_26.html
+(defun bcl::elt-or (seq index default)
+  (etypecase seq
+    (null default)
+    (cons (or (nth index seq)
+              (let ((len (length seq)))
+                (if (< index len)
+                    (elt seq index)
+                    default))))
+    (sequence (let ((len (length seq)))
+                (if (< index len)
+                    (elt seq index)
+                    default)))))
+
+
 (declaim (inline mem))
 
 
