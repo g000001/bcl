@@ -62,6 +62,21 @@
                 ,@body)
               (bcl:scan-range :from ,beg :upto ,end)))))
 
+
+(defmethod expand-do ((type (eql 'bcl::plist)) varspec body)
+  `(bcl:iterate ((,(car varspec) (bcl:scan-plist ,(cadr varspec))))
+      ,@body))
+
+
+(defmethod expand-do ((type (eql 'bcl::alist)) varspec body)
+  `(bcl:iterate ((,(car varspec) (bcl:scan-alist ,(cadr varspec))))
+      ,@body))
+
+
+(defmethod expand-do ((type (eql 'hash-table)) varspec body)
+  `(bcl:iterate ((,(car varspec) (bcl:scan-hash ,(cadr varspec))))
+      ,@body))
+
 (defmethod expand-do ((type (eql 'sequence)) varspec body)
   `(bcl:collect-ignore
     (bcl:map-fn T

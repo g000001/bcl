@@ -11,7 +11,7 @@
   (:shadowing-import-from #:nil #:let)
   ;;
   (:shadow do dolist dotimes map)
-  (:export times symbols all-symbols json range)
+  (:export times symbols all-symbols json range plist alist)
   (:export seq || elt-or)
   (:export dolist dotimes doseq dovec dorange)
   ;;
@@ -1321,11 +1321,38 @@
    #:←
    #:classq
    #:makeq)
-  #+lispworks8
+  ;#+lispworks8
+  #|(:export .
+   #.(cl:loop :for s :being :the :external-symbols :of :trivia :collect s))|#
   (:export .
-   #.(cl:loop :for s :being :the :external-symbols :of :trivia :collect s))
-  (:export .
-   #.(cl:loop :for s :being :the :external-symbols :of :st-json :collect s)))
+   #.(cl:loop :for s :being :the :external-symbols :of :st-json :collect s))
+  (:export
+   "^A"
+   "^B"
+   "^C"
+   "^D"
+   "^E"
+   "^F"
+   "^G"
+   "^H"
+   "^I"
+   "^J"
+   "^K"
+   "^L"
+   "^M"
+   "^N"
+   "^O"
+   "^P"
+   "^Q"
+   "^R"
+   "^S"
+   "^T"
+   "^U"
+   "^V"
+   "^W"
+   "^X"
+   "^Y"
+   "^Z"))
 
 
 (cl:defpackage "1D741711-0401-5576-80C1-353116694E87" 

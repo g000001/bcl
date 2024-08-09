@@ -20,6 +20,7 @@
 
 (defmethod (setf ref) (val (obj standard-object) key
                        &optional default)
+  (declare (ignore default))
   (setf (slot-value obj key) val))
 
 
@@ -40,6 +41,7 @@
 
 
 (defmethod (setf ref) (val (obj vector) (key integer) &optional default)
+  (declare (ignore default))
   (setf (elt obj key) val))
 
 
@@ -98,7 +100,7 @@
 
 ;; function
 (defmethod ref ((obj (eql 'cl:function)) key &optional default)
-  (declare (ignore default obj key))
+  (declare (ignore default obj))
   (lambda (x) (ref x key)))
 
 
@@ -129,11 +131,12 @@
 
 (defmethod ref ((obj jso) (key string)
                 &optional default)
-  (declare (ignore default obj key))
+  (declare (ignore default))
   (st-json:getjso key obj))
 
 
 (defmethod (setf ref) (val (obj jso) key &optional default)
+  (declare (ignore default))
   (setf (getjso key obj) val))
 
 

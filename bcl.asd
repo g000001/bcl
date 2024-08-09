@@ -14,7 +14,9 @@
                #:zrdbc
                #:srfi-2
                #:st-json
-               #+lispworks8 #:trivia)
+               #:srfi-62
+               ;#+lispworks8 #:trivia
+               )
   :components ((:file "package")
                (:file "bcl")
                (:file "with")

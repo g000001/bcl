@@ -11,6 +11,37 @@
   `(function (lambda (,@args) ,@body)))
 
 
+(macrolet ((def^ (name)
+             `(defmacro ,(intern (concatenate 'string "^" (string name))) (&body body)
+                `(lambda (,(intern ,(string name))) ,@body))))
+  (def^ a)
+  (def^ b)
+  (def^ c)
+  (def^ d)
+  (def^ e)
+  (def^ f)
+  (def^ g)
+  (def^ h)
+  (def^ i)
+  (def^ j)
+  (def^ k)
+  (def^ l)
+  (def^ m)
+  (def^ n)
+  (def^ o)
+  (def^ p)
+  (def^ q)
+  (def^ r)
+  (def^ s)
+  (def^ t)
+  (def^ u)
+  (def^ v)
+  (def^ w)
+  (def^ x)
+  (def^ y)
+  (def^ z))
+
+
 (defmacro fun ((&rest args) &body body)
   `(function (lambda (,@args) ,@body)))
 
@@ -156,6 +187,8 @@
       (declare (ignore chr arg))
       `(eval-always
         ,(read srm T nil T))))
+   (cl:set-dispatch-macro-character #\# #\;
+                                    #'srfi-62:s-expression-comments)
    (cl:set-dispatch-macro-character
     #\# (character "")
     (lambda (srm chr arg)
