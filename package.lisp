@@ -4,18 +4,25 @@
 
 
 (cl:defpackage "BCL"
-  (:use #:c2cl #:zrseries #:srfi-2 #:zrdbc #:st-json #:allegretto-regexp)
+  (:use #:c2cl #:equal #:zrseries #:srfi-2 #:zrdbc #:st-json #:allegretto-regexp)
   (:intern #:in-sub-package)
+  (:shadowing-import-from #:equal
+   subst remove mismatch subsetp set-exclusive-or make-hash-table set-difference search nunion pushnew sublis delete remove-duplicates nset-exclusive-or nsublis union find nsubst rassoc delete-duplicates nset-difference tree-equal intersection count nintersection nsubstitute position assoc substitute member adjoin)
   (:shadowing-import-from #:cl
    #:let* #:multiple-value-bind #:funcall #:defun)
   (:shadowing-import-from #:nil #:let)
   ;;
+  (:export define-bcl-package)
   (:shadow do dolist dotimes map)
+  ;; makunbound
+  ;;(:shadow setf)
+  (:export makunboundf)
   (:export times symbols all-symbols json range plist alist)
   (:export seq || elt-or)
   (:export dolist dotimes doseq dovec dorange)
   ;;
   (:shadow #:or)
+  (:export #:key)
   (:export or)
   (:export cset csetq)
   (:export ~ ref)
@@ -57,6 +64,7 @@
    isa
    eval-always
    ^
+   λ
    fun
    let
    put
@@ -1181,7 +1189,8 @@
    #:re-case
    #:compile-re)
   ;; re
-  (:export 
+  (:export
+   #:re.bind
    #:re.apropos-list
    #:re.apropos
    #:re.replace
@@ -1352,7 +1361,34 @@
    "^W"
    "^X"
    "^Y"
-   "^Z"))
+   "^Z")
+  (:export
+   "λA"
+   "λB"
+   "λC"
+   "λD"
+   "λE"
+   "λF"
+   "λG"
+   "λH"
+   "λI"
+   "λJ"
+   "λK"
+   "λL"
+   "λM"
+   "λN"
+   "λO"
+   "λP"
+   "λQ"
+   "λR"
+   "λS"
+   "λT"
+   "λU"
+   "λV"
+   "λW"
+   "λX"
+   "λY"
+   "λZ"))
 
 
 (cl:defpackage "1D741711-0401-5576-80C1-353116694E87" 

@@ -1,5 +1,37 @@
 (bcl::in-sub-package)
 
+(defclass bcl::key ()
+  ((content :accessor key-content :initarg :content)))
+
+
+(defclass integer-key (key)
+  ())
+
+
+(defclass symbol-key (key)
+  ())
+
+
+(defclass keyword-key (symbol-key)
+  ())
+
+
+(defclass string-key (key)
+  ())
+
+
+(defun bcl::key (obj)
+  (typecase obj
+    (integer (make-instance 'integer-key :content obj))
+    (symbol (make-instance 'symbol-key :content obj))
+    (keyword (make-instance 'keyword-key :content obj))
+    (string (make-instance 'string-key :content obj))
+    (T (make-instance 'key :content obj))))
+
+
+(defmethod print-object ((obj key) stream)
+  (format stream "[~S]" (key-content obj)))
+
 
 (defgeneric ref (obj key &optional default))
 
@@ -34,6 +66,18 @@
 
 
 ;; sequence
+(defmethod ref ((obj sequence) (key integer-key) &optional default)
+  (let ((index (key-content key)))
+    (if (< 0 index (length obj))
+        (elt obj index)
+        default)))
+
+
+(defmethod (setf ref) (val (obj sequence) (key integer-key) &optional default)
+  (declare (ignore default))
+  (setf (elt obj (key-content key)) val))
+
+
 (defmethod ref ((obj vector) (key integer) &optional default)
   (if (array-in-bounds-p obj key)
       (elt obj key)
@@ -45,8 +89,17 @@
   (setf (elt obj key) val))
 
 
+(defmethod ref ((obj cons) (key integer) &optional default)
+  (elt obj key))
+
+
+(defmethod (setf ref) (val (obj cons) (key integer) &optional default)
+  (declare (ignore default))
+  (setf (elt obj key) val))
+
+
 ;; plist
-(defmethod ref ((obj cons) key &optional default)
+(defmethod ref ((obj cons) (key symbol) &optional default)
   (cl:getf obj key default))
 
 
@@ -55,7 +108,7 @@
   (cl:get-properties obj key))
 
 
-(defmethod (setf ref) (val (obj cons) key &optional default)
+(defmethod (setf ref) (val (obj list) (key symbol) &optional default)
   (if (find key obj)
       (setf (cl:getf obj key default) val)
       (let ((ans (append obj (list key val))))
@@ -162,10 +215,22 @@
   `(cl:or ,@test-forms))
 
 
-(define-setf-expander or (place default &environment env)
+(define-setf-expander bcl:or (place default &environment env)
   (multiple-value-bind (temps subforms stores setterform getterform)
                        (cl:get-setf-expansion place env)
     (values temps subforms stores setterform `(,@getterform ,default))))
+
+
+(defmacro bcl:makunboundf (place)
+  (etypecase place
+    ((cons (eql symbol-value) *)
+     `(makunbound ,@(cdr place)))
+    ((cons (eql symbol-function) *)
+     `(fmakunbound ,@(cdr place)))
+    ((cons (eql get) *)
+     `(remprop ,@(cdr place)))
+    ((cons (eql slot-value) *)
+     `(slot-makunbound ,@(cdr place)))))
 
 
 ;;; *EOF*

@@ -4,9 +4,10 @@
   :description "Better CL"
   :author "CHIBA Masaomi <chiba.masaomi@gmail.com>"
   :license  "MIT"
-  :version "0.0.6"
+  :version "0.0.7"
   :serial t
-  :depends-on (#:cl-ppcre
+  :depends-on (#:equal
+               #:cl-ppcre
                #:allegretto-regexp
                #:zrseries
                #:closer-mop

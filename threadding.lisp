@@ -27,6 +27,7 @@
        ,(destructuring-bind (let* bvl . body)
                             (#+lispworks walker:walk-form
                              #+allegro excl::walk-form 
+                             #+sbcl sb-walker:walk-form 
                              `(let* (,@(mapcar (lambda (v)
                                                  (destructuring-bind (var . val)
                                                      v

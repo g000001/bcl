@@ -11,9 +11,16 @@
   `(function (lambda (,@args) ,@body)))
 
 
+(defmacro λ ((&rest args) &body body)
+  `(function (lambda (,@args) ,@body)))
+
+
 (macrolet ((def^ (name)
-             `(defmacro ,(intern (concatenate 'string "^" (string name))) (&body body)
-                `(lambda (,(intern ,(string name))) ,@body))))
+             `(progn
+                (defmacro ,(intern (concatenate 'string "^" (string name))) (&body body)
+                  `(lambda (,(intern ,(string name))) ,@body))
+                (defmacro ,(intern (concatenate 'string "λ" (string name))) (&body body)
+                  `(lambda (,(intern ,(string name))) ,@body)))))
   (def^ a)
   (def^ b)
   (def^ c)
@@ -98,6 +105,7 @@
 (bcl:eval-always
   (setf (find-class 'bcl::json)
         (find-class 'st-json::jso)))
+
 
 (declaim (inline fstring))
 
@@ -269,8 +277,9 @@
   `(make-instance ',name ,@args))
 
 
-(defmacro bcl:← (&rest args)
-  `(setf ,@args))
+(prog ()
+  (defmacro bcl:← (&rest args)
+    `(setf ,@args)))
 
 
 (defun bcl:object-named (name)
@@ -300,7 +309,10 @@
        (defmethod ,name (,@args) ,@main)
        ,(and out `(defmethod ,name :out (,@args) (lambda (,@result-vars) ,@out))))))|#
 
-()
+(defmacro bcl:define-bcl-package (name &rest options)
+  `(cl:defpackage ,name
+     (:shadowing-import-from #:bcl #:do #:dotimes #:defpackage #:dolist #:or #:map)
+     ,@options))
 
 
 ;;; *EOF*
