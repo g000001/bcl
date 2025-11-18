@@ -26,4 +26,5 @@
                (:file "regex")
                (:file "threadding")
                (:file "do")
+               (:file "pkg")
                (:file "bcl-user")))

@@ -49,7 +49,7 @@
 (defmethod expand-do ((type (eql 'bcl:series)) varspec body)
   `(collect-ignore
     (map-fn T
-            (lambda (,(car varspec))
+            (cl:lambda (,(car varspec))
               ,@body)
             ,(cadr varspec))))
 
@@ -58,7 +58,7 @@
                       varspec
     `(collect-ignore
       (map-fn T
-              (lambda (,(car varspec))
+              (cl:lambda (,(car varspec))
                 ,@body)
               (bcl:scan-range :from ,beg :upto ,end)))))
 
@@ -80,7 +80,7 @@
 (defmethod expand-do ((type (eql 'sequence)) varspec body)
   `(bcl:collect-ignore
     (bcl:map-fn T
-                (lambda (,(car varspec))
+                (cl:lambda (,(car varspec))
                   ,@body)
                 (bcl:scan ,(cadr varspec)))))
 

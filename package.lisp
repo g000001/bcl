@@ -6,14 +6,20 @@
 (cl:defpackage "BCL"
   (:use #:c2cl #:equal #:zrseries #:srfi-2 #:zrdbc #:st-json #:allegretto-regexp)
   (:intern #:in-sub-package)
+  (:shadow #:if #:when #:it)
   (:shadowing-import-from #:equal
    subst remove mismatch subsetp set-exclusive-or make-hash-table set-difference search nunion pushnew sublis delete remove-duplicates nset-exclusive-or nsublis union find nsubst rassoc delete-duplicates nset-difference tree-equal intersection count nintersection nsubstitute position assoc substitute member adjoin)
   (:shadowing-import-from #:cl
-   #:let* #:multiple-value-bind #:funcall #:defun)
+   #:let* #:multiple-value-bind #:funcall)
   (:shadowing-import-from #:nil #:let)
   ;;
+  (:export pkg-bind /*)
   (:export define-bcl-package)
+  (:export #:bcl)
+  (:export zlet zlet* multiple-value-zbind)
   (:shadow do dolist dotimes map)
+  (:shadow defun lambda)
+  (:export de dm dv)
   ;; makunbound
   ;;(:shadow setf)
   (:export makunboundf)
@@ -21,15 +27,20 @@
   (:export seq || elt-or)
   (:export dolist dotimes doseq dovec dorange)
   ;;
+  (:shadow #:if #:when #:it)
+  (:export #:it)
   (:shadow #:or)
   (:export #:key)
+  (:export if)
   (:export or)
   (:export cset csetq)
   (:export ~ ref)
   (:export name)
   (:export for)
   (:export def)
+  (:export magical-increment)
   (:export and-let*)
+  (:export tree-walk)
   (:export
    ;; seq.lisp
    mem
@@ -61,6 +72,7 @@
    bcl-syntax
    loop
    a
+   aq
    isa
    eval-always
    ^
@@ -1222,6 +1234,13 @@
    #:*regex-char-code-limit*
    #:*use-bmh-matchers*)
   (:export
+   ;; series ext
+   #:multiple-value-collect-hash
+   #:multiple-value-collect-alist
+   #:multiple-value-collect-plist
+   #:to-hash
+   #:to-alist
+   #:to-plist
    ;; series
    #:collecting-fn
    #:collect-length
@@ -1363,32 +1382,32 @@
    "^Y"
    "^Z")
   (:export
-   "λA"
-   "λB"
-   "λC"
-   "λD"
-   "λE"
-   "λF"
-   "λG"
-   "λH"
-   "λI"
-   "λJ"
-   "λK"
-   "λL"
-   "λM"
-   "λN"
-   "λO"
-   "λP"
-   "λQ"
-   "λR"
-   "λS"
-   "λT"
-   "λU"
-   "λV"
-   "λW"
-   "λX"
-   "λY"
-   "λZ"))
+   λa
+   λb
+   λc
+   λd
+   λe
+   λf
+   λg
+   λh
+   λi
+   λj
+   λk
+   λl
+   λm
+   λn
+   λo
+   λp
+   λq
+   λr
+   λs
+   λt
+   λu
+   λv
+   λw
+   λx
+   λy
+   λz))
 
 
 (cl:defpackage "1D741711-0401-5576-80C1-353116694E87" 

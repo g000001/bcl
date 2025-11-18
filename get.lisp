@@ -55,6 +55,16 @@
   (declare (ignore default))
   (setf (slot-value obj key) val))
 
+;; structure-object
+(defmethod ref ((obj structure-object) key &optional default)
+  (cl:or (slot-value obj key) default))
+
+
+(defmethod (setf ref) (val (obj structure-object) key
+                       &optional default)
+  (declare (ignore default))
+  (setf (slot-value obj key) val))
+
 
 ;; hash-table
 (defmethod ref ((obj hash-table) key &optional default)
@@ -69,8 +79,8 @@
 (defmethod ref ((obj sequence) (key integer-key) &optional default)
   (let ((index (key-content key)))
     (if (< 0 index (length obj))
-        (elt obj index)
-        default)))
+        then (elt obj index)
+        else default)))
 
 
 (defmethod (setf ref) (val (obj sequence) (key integer-key) &optional default)

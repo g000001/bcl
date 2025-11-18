@@ -74,6 +74,31 @@
       (setq prev chr))))
 
 
+(declaim (inline bcl::create-scanner*))
+
+
+(defun bcl::create-scanner* (regex &key
+                                   case-insensitive-mode
+                                   multi-line-mode
+                                   single-line-mode
+                                   extended-mode
+                                   destructive)
+  (multiple-value-bind (fctn names)
+                       (ppcre:create-scanner regex
+                                             :case-insensitive-mode case-insensitive-mode 
+                                             :multi-line-mode multi-line-mode
+                                             :single-line-mode single-line-mode
+                                             :extended-mode extended-mode
+                                             :destructive destructive)
+    (values (lambda (target &optional (beg 0) (end (length target)) &rest args)
+              (declare (ignore args))
+              (funcall fctn
+                       target
+                       beg
+                       end))
+            names)))
+
+
 (bcl:eval-always
   (flet ((read-/ (srm chr arg)
            (declare (ignore arg))
@@ -88,7 +113,7 @@
                                                               (read-char in)
                                                               :case-fold)
                                                              (otherwise nil))))
-             `(ppcre:create-scanner ,re :case-insensitive-mode ,case-fold-p))))
+             `(bcl::create-scanner* ,re :case-insensitive-mode ,case-fold-p))))
     (setf (~ bcl:*bcl* '(#\# #\/))
           #'read-/)))
 

@@ -49,4 +49,48 @@
       result)))
 
 
+(defmacro multiple-value-collect-hash (&body series-values)
+  (let ((ks (gensym))
+        (vs (gensym)))
+    `(zrseries:multiple-value-bind (,ks ,vs)
+                          ,(car series-values)
+       (zrseries:collect-hash ,ks ,vs :test 'equal))))
+
+
+(defmacro multiple-value-collect-alist (&body series-values)
+  (let ((ks (gensym))
+        (vs (gensym)))
+    `(zrseries:multiple-value-bind (,ks ,vs)
+                          ,(car series-values)
+       (zrseries:collect-alist ,ks ,vs))))
+
+
+(defmacro to-hash (key-fn value-fn &body series-values)
+  (let ((x (gensym)))
+    `(multiple-value-collect-hash 
+       (zrseries:map-fn '(values t t)
+                        (lambda (,x)
+                          (values (funcall ,key-fn ,x)
+                                  (funcall ,value-fn ,x)))
+                        ,(car series-values)))))
+
+(defmacro to-alist (key-fn value-fn &body series-values)
+  (let ((x (gensym)))
+    `(multiple-value-collect-alist
+      (zrseries:map-fn '(values t t)
+                       (lambda (,x)
+                         (values (funcall ,key-fn ,x)
+                                 (funcall ,value-fn ,x)))
+                       ,(car series-values)))))
+
+(defmacro to-plist (key-fn value-fn &body series-values)
+  (let ((x (gensym)))
+    `(multiple-value-collect-plist
+       (zrseries:map-fn '(values t t)
+                        (lambda (,x)
+                          (values (funcall ,key-fn ,x)
+                                  (funcall ,value-fn ,x)))
+                        ,(car series-values)))))
+
+
 ;;; *EOF*
