@@ -102,7 +102,7 @@
 
 
 (loop :for s :being :the external-symbols :of :ppcre
-      :do (when (and (fboundp s)
+      :do (cl:when (and (fboundp s)
                      (not (search #.(string '#:regex) (string s))))
             (let ((name (intern (concatenate 'string
                                              (string "RE.")
@@ -141,12 +141,12 @@
       (push match-end pos-list)
       (push reg-starts reg-list)
       (push reg-ends reg-list))
-    (if (and count (<= (* 2 count) (length pos-list)))
+    (cl:if (and count (<= (* 2 count) (length pos-list)))
         (setq pos-list (subseq (nreverse pos-list) 0 (* 2 count))
               reg-list (subseq (nreverse reg-list) 0 (* 2 count)))
         (setq pos-list (nreverse pos-list)
               reg-list (nreverse reg-list)))
-    (if pos-list
+    (cl:if pos-list
         (values (ppcre::replace-aux target-string replacement
                                     pos-list
                                     reg-list
@@ -224,8 +224,8 @@
  (cl:defun read-foreign-syntax (srm chr)
    (declare (ignore chr))
    (let ((syntax-designator (loop :for c := (read-char srm nil)
-                                  :until (or (null c)
-                                             (eql #\| c))
+                                  :until (cl:or (null c)
+                                                (eql #\| c))
                                   :collect c)))
      (unread-char #\| srm)
      (let ((expr (string-trim #(#\Newline #\Return #\Space #\Tab) (coerce syntax-designator 'string))))
@@ -271,8 +271,8 @@
    (cl:set-macro-character (code-char 3) ;;#\ETX 
                            (cl:lambda (s c) 
                              (declare (ignore c)) 
-                             (loop (or (read-char s nil) 
-                                       (return))) 
+                             (loop (cl:or (read-char s nil) 
+                                          (return))) 
                              (values)))
    (cl:set-syntax-from-char #\] #\))
    (cl:set-macro-character #\[ #'read-foreign-syntax)
@@ -391,10 +391,10 @@
 
 
 (defmacro bcl:/* (&body body) 
-  `(or *load-pathname* 
-       *compile-file-pathname* 
-       (eval-when (:execute) 
-         ,@body)))
+  `(cl:or *load-pathname* 
+          *compile-file-pathname* 
+          (eval-when (:execute) 
+            ,@body)))
 
 
 #|)(defmacro bcl:def (name (&rest args) 

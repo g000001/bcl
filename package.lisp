@@ -13,6 +13,9 @@
    #:let* #:multiple-value-bind #:funcall)
   (:shadowing-import-from #:nil #:let)
   ;;
+  (:export #:matcher #:something-matcher #:list-matcher #:multiset-matcher #:set-matcher
+           #:>< #:uncons #:match-all #:fpa-align ><match ><let
+           m-list m-mset m-set)
   (:export pkg-bind /*)
   (:export define-bcl-package)
   (:export #:bcl)
