@@ -264,6 +264,35 @@
           (return))))))
 
 
+
+(defun debug-reader (srm char)
+  (unread-char char srm)
+  (let ((in-debug nil))
+    (loop :for line := (cl:if (eql #\; (peek-char t srm nil nil T))
+                              (read-line srm nil srm T)
+                              srm)
+          :until (cl:or (and (eq line srm) 
+                             (cl:if in-debug
+                                    (error "DEBUG_BEGIN has no DEBUG_END")
+                                    t))
+                        (and (ppcre:scan "^\\s*;+\\s*DEBUG_END\\b.*" line)
+                             (cl:or in-debug (error "DEBUG_END has no DEBUG_BEGIN"))))
+          :when (ppcre:scan "^\\s*;+\\s*DEBUG_BEGIN\\b.*" line)
+            :do (cl:if in-debug
+                       (error "Nested DEBUG_BEGIN")
+                       (setf in-debug T))
+          :else 
+            :when (and in-debug (typep line 'string)) 
+              :collect (ppcre:regex-replace "^\\s*;+" line "") :into ans
+          :finally (return 
+                     (let ((ans (apply #'concatenate 'string ans)))
+                       (cl:if (< 0 (length ans))
+                              (read-from-string (format nil "(progn ~A)" ans))
+                              (values)))))))
+
+
+
+ 
  (defvar *bcl* (copy-readtable nil))
 
  
@@ -274,6 +303,7 @@
                              (loop (cl:or (read-char s nil) 
                                           (return))) 
                              (values)))
+   (cl:set-macro-character #\; #'debug-reader)
    (cl:set-syntax-from-char #\] #\))
    (cl:set-macro-character #\[ #'read-foreign-syntax)
    (make-dispatch-macro-character #\! T)

@@ -206,6 +206,17 @@
 ;;; 2. The ><match Macro
 ;;; ---------------------------------------------------------------------------
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun flatten-pattern (pattern)
+    "パターンからシンボル（変数）のみを抽出する補助関数。"
+    (typecase pattern
+      (null nil)
+      (symbol (list pattern))
+      (list (append (flatten-pattern (car pattern))
+                    (flatten-pattern (cdr pattern))))
+      (T nil))))
+
+
 (defmacro ><match (target matcher-form &body clauses)
   "(><match data (make-instance 'multiset-matcher)
      ((x x . rest) (list x rest)))"
@@ -224,14 +235,7 @@
                                              ,result-form))))))))
 
 
-(defun flatten-pattern (pattern)
-  "パターンからシンボル（変数）のみを抽出する補助関数。"
-  (typecase pattern
-    (null nil)
-    (symbol (list pattern))
-    (list (append (flatten-pattern (car pattern))
-                  (flatten-pattern (cdr pattern))))
-    (T nil)))
+
 
 
 ;;; ---------------------------------------------------------------------------

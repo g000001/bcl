@@ -6,6 +6,7 @@
 (cl:defpackage "BCL"
   (:use #:c2cl #:equal #:zrseries #:srfi-2 #:zrdbc #:st-json #:allegretto-regexp)
   (:intern #:in-sub-package)
+  (:shadow :defun :lambda)
   (:shadow #:if #:when #:it)
   (:shadowing-import-from #:equal
    subst remove mismatch subsetp set-exclusive-or make-hash-table set-difference search nunion pushnew sublis delete remove-duplicates nset-exclusive-or nsublis union find nsubst rassoc delete-duplicates nset-difference tree-equal intersection count nintersection nsubstitute position assoc substitute member adjoin)

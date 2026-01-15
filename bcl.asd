@@ -27,4 +27,5 @@
                (:file "threadding")
                (:file "do")
                (:file "pkg")
+               (:file "mweq")
                (:file "bcl-user")))
