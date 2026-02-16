@@ -14,6 +14,7 @@
    #:let* #:multiple-value-bind #:funcall)
   (:shadowing-import-from #:nil #:let)
   ;;
+  (:export eval-after-load)
   (:export #:matcher #:something-matcher #:list-matcher #:multiset-matcher #:set-matcher
            #:>< #:uncons #:match-all #:fpa-align ><match ><let
            m-list m-mset m-set)

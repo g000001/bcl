@@ -1,5 +1,6 @@
 (bcl::in-sub-package)
 
+
 (defclass bcl::key ()
   ((content :accessor key-content :initarg :content)))
 
@@ -36,7 +37,7 @@
 (defgeneric ref (obj key &optional default))
 
 
-;; symbol
+;;; symbol
 (defmethod ref ((obj symbol) key &optional default)
   (cl:get obj key default))
 
@@ -45,7 +46,7 @@
   (setf (cl:get obj key default) val))
 
 
-;; standard-object
+;;; standard-object
 (defmethod ref ((obj standard-object) key &optional default)
   (cl:or (slot-value obj key) default))
 
@@ -55,7 +56,8 @@
   (declare (ignore default))
   (setf (slot-value obj key) val))
 
-;; structure-object
+
+;;; structure-object
 (defmethod ref ((obj structure-object) key &optional default)
   (cl:or (slot-value obj key) default))
 
@@ -66,7 +68,7 @@
   (setf (slot-value obj key) val))
 
 
-;; hash-table
+;;; hash-table
 (defmethod ref ((obj hash-table) key &optional default)
   (cl:gethash key obj default))
 
@@ -75,7 +77,7 @@
   (setf (cl:gethash key obj default) val))
 
 
-;; sequence
+;;; sequence
 (defmethod ref ((obj sequence) (key integer-key) &optional default)
   (let ((index (key-content key)))
     (if (< 0 index (length obj))
@@ -108,7 +110,7 @@
   (setf (elt obj key) val))
 
 
-;; plist
+;;; plist
 (defmethod ref ((obj cons) (key symbol) &optional default)
   (cl:getf obj key default))
 
@@ -127,7 +129,7 @@
         obj)))
 
 
-;; readtable
+;;; readtable
 (defmethod ref ((obj readtable) key &optional non-terminating-p)
   (declare (ignore non-terminating-p))
   (etypecase key
@@ -145,7 +147,7 @@
             (cl:set-dispatch-macro-character dsp sub val obj)))))
 
 
-;; string-output-stream
+;;; string-output-stream
 
 (eval-always
   (setf (find-class 'string-output-stream)
@@ -161,13 +163,13 @@
   (cl:get-output-stream-string obj))
 
 
-;; function
+;;; function
 (defmethod ref ((obj (eql 'cl:function)) key &optional default)
   (declare (ignore default obj))
   (lambda (x) (ref x key)))
 
 
-;; time
+;;; time
 (defmethod ref ((obj (eql 'time)) (key (eql 'decoded))
                 &optional default)
   (declare (ignore default obj key))
@@ -243,4 +245,13 @@
      `(slot-makunbound ,@(cdr place)))))
 
 
-;;; *EOF*
+'(eval-when (:compile-toplevel :load-toplevel :execute)
+(eval-after-load 'plump
+                 "(defmethod ref ((x plump:element) key &optional default)
+  (declare (ignore default))
+  (plump:attribute x key))"))
+
+
+;;;; *EOF*
+
+

@@ -56,6 +56,7 @@
 (defmethod expand-do ((type (eql 'bcl::range)) varspec body)
   (destructuring-bind (var beg &optional end)
                       varspec
+    (declare (ignore var))
     `(collect-ignore
       (map-fn T
               (cl:lambda (,(car varspec))

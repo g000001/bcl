@@ -9,8 +9,9 @@
 
 #+lispworks
 (cl:defpackage #:bcl-user
-  (:use #:bcl :capi)
-  (:export #:d))
+  (:use #:bcl :capi :zreclos)
+  (:export #:d)
+  (:shadowing-import-from :zreclos defclass))
 
 
 ;;; *EOF*

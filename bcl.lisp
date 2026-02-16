@@ -344,24 +344,6 @@
   `(progn . ,body))
 
 
-(defmacro for (&rest body)
-  `(loop 
-    ,@(reduce (cl:lambda (res b)
-                (append res (->loop-clause b)))
-              body
-              :initial-value nil)))
-
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (cl:defun ->loop-clause (xpr)
-    (case (find (car xpr) '(let) :test #'string-equal)
-      (let (destructuring-bind (let &rest args)
-                               xpr
-             (declare (ignore let))
-             `(for ,@args)))
-      (otherwise xpr))))
-
-
 (defmacro Zdefun (name (&rest args) &body body)
   `(zrseries:defun ,name (,@args)
      (declare (zrseries:optimizable-series-function))
@@ -608,5 +590,12 @@
   `(cl:let ((bcl:it ,val))
      ,@body))
 
+
+(defun bcl:eval-after-load (package expr)
+  (when (find-package package)
+    (funcall
+     (compile nil
+              `(cl:lambda ()
+                 ,(read-from-string expr))))))
 
 ;;; *EOF*
