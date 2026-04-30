@@ -2,6 +2,12 @@
 
 (bcl::in-sub-package)
 
+
+(defvar *null-stream* (make-two-way-stream 
+                       (make-concatenated-stream) 
+                       (make-broadcast-stream)))
+
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
 (cl:defun expand-internal-ds (xs)
   (typecase xs
@@ -297,6 +303,14 @@
 
  
  (let ((*readtable* *bcl*))
+   (cl:set-macro-character #\⏜
+                           (cl:lambda (srm chr)
+                             (declare (ignore chr))
+                             (read-delimited-list #\⏝
+                                                  srm
+                                                  T)))
+   (cl:set-syntax-from-char #\⏝ #\))
+   ;;
    (cl:set-macro-character (code-char 3) ;;#\ETX 
                            (cl:lambda (s c) 
                              (declare (ignore c)) 
@@ -598,4 +612,7 @@
               `(cl:lambda ()
                  ,(read-from-string expr))))))
 
+
 ;;; *EOF*
+
+

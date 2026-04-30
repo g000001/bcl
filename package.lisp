@@ -18,6 +18,7 @@
   (:export #:matcher #:something-matcher #:list-matcher #:multiset-matcher #:set-matcher
            #:>< #:uncons #:match-all #:fpa-align ><match ><let
            m-list m-mset m-set)
+  (:export match)
   (:export pkg-bind /*)
   (:export define-bcl-package)
   (:export #:bcl)
@@ -46,6 +47,7 @@
   (:export magical-increment)
   (:export and-let*)
   (:export tree-walk)
+  (:export *null-stream*)
   (:export
    ;; seq.lisp
    mem

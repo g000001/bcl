@@ -16,7 +16,6 @@
                #:srfi-2
                #:st-json
                #:srfi-62
-               ;#+lispworks8 #:trivia
                )
   :components ((:file "package")
                (:file "bcl")
@@ -28,4 +27,5 @@
                (:file "do")
                (:file "pkg")
                (:file "mweq")
+               (:file "match")
                (:file "bcl-user")))
