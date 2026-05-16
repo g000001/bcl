@@ -1209,6 +1209,8 @@
    #:compile-re)
   ;; re
   (:export
+   #:lines
+   ;;
    #:re.bind
    #:re.apropos-list
    #:re.apropos

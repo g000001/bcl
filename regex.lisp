@@ -118,4 +118,10 @@
           #'read-/)))
 
 
+(defun lines (s)
+  (bcl:re.split "\\n" s))
+
+
 ;;; *EOF*
+
+
