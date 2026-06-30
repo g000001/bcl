@@ -613,6 +613,10 @@
                  ,(read-from-string expr))))))
 
 
+(defmacro source-pathname ()
+  `,(or *compile-file-truename* *load-truename*))
+
+
 ;;; *EOF*
 
 
