@@ -31,7 +31,7 @@
   (:export makunboundf)
   (:export times symbols all-symbols json range plist alist)
   (:export seq || elt-or)
-  (:export dolist dotimes doseq dovec dorange)
+  (:export dolist dotimes doseq dovec dorange while until)
   ;;
   (:shadow #:if #:when #:it)
   (:export #:it)

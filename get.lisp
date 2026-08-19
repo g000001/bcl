@@ -217,10 +217,13 @@
 
 
 (defmacro ~ (obj &rest slot-names)
-  (reduce (lambda (acc x)
-            (list 'bcl:ref acc x))
-          slot-names
-          :initial-value obj))
+  (typecase obj
+    ((cons (eql the) (cons (eql array) *))
+     `(aref ,obj ,@slot-names))
+    (T (reduce (lambda (acc x)
+                 (list 'bcl:ref acc x))
+               slot-names
+               :initial-value obj))))
 
 
 (defmacro bcl:or (&rest test-forms)

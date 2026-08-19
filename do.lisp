@@ -57,11 +57,12 @@
   (destructuring-bind (var beg &optional end)
                       varspec
     (declare (ignore var))
-    `(collect-ignore
-      (map-fn T
-              (cl:lambda (,(car varspec))
-                ,@body)
-              (bcl:scan-range :from ,beg :upto ,end)))))
+    `(block nil
+       (collect-ignore
+         (map-fn T
+                 (cl:lambda (,(car varspec))
+                   ,@body)
+                 (bcl:scan-range :from ,beg :upto ,end))))))
 
 
 (defmethod expand-do ((type (eql 'bcl::plist)) varspec body)

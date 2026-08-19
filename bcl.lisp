@@ -299,63 +299,75 @@
 
 
  
- (defvar *bcl* (copy-readtable nil))
+(defvar *bcl* (copy-readtable nil))
 
- 
- (let ((*readtable* *bcl*))
-   (cl:set-macro-character #\⏜
-                           (cl:lambda (srm chr)
-                             (declare (ignore chr))
-                             (read-delimited-list #\⏝
-                                                  srm
-                                                  T)))
-   (cl:set-syntax-from-char #\⏝ #\))
-   ;;
-   (cl:set-macro-character (code-char 3) ;;#\ETX 
-                           (cl:lambda (s c) 
-                             (declare (ignore c)) 
-                             (loop (cl:or (read-char s nil) 
-                                          (return))) 
-                             (values)))
-   (cl:set-macro-character #\; #'debug-reader)
-   (cl:set-syntax-from-char #\] #\))
-   (cl:set-macro-character #\[ #'read-foreign-syntax)
-   (make-dispatch-macro-character #\! T)
-   (cl:set-dispatch-macro-character #\! #\" #'read-raw-string)
-   (cl:set-dispatch-macro-character #\# #\" #'concat-string)
-   (cl:set-dispatch-macro-character
-    #\! #\(
-    (cl:lambda (srm chr arg)
-      (declare (ignore chr arg))
-      (cons 'cl:funcall (read-delimited-list #\) srm T))))
-   (cl:set-dispatch-macro-character #\# #\Z
-                                 #'zrseriesi::series-reader)
-   (cl:set-dispatch-macro-character #\# #\M
-                                 #'zrseriesi::abbreviated-map-fn-reader)
-   (cl:set-dispatch-macro-character
-    #\# #\@
-    (cl:lambda (srm chr arg)
-      (declare (ignore chr arg))
-      `(eval-always
-        ,(read srm T nil T))))
-   (cl:set-dispatch-macro-character #\# #\;
-                                    #'srfi-62:s-expression-comments)
-   (cl:set-dispatch-macro-character
-    #\# (character "")
-    (cl:lambda (srm chr arg)
-      (declare (ignore chr arg))
-      (cons 'eval-always
-            (read-delimited-list (character "") srm T)))))
+(let ((*readtable* *bcl*))
+  (cl:set-macro-character #\⏜
+                          (cl:lambda (srm chr)
+                            (declare (ignore chr))
+                            (read-delimited-list #\⏝
+                                                 srm
+                                                 T)))
+  (cl:set-syntax-from-char #\⏝ #\))
+  ;;
+  (cl:set-macro-character (code-char 3) ;;#\ETX 
+                          (cl:lambda (s c) 
+                            (declare (ignore c)) 
+                            (loop (cl:or (read-char s nil) 
+                                         (return))) 
+                            (values)))
+  (cl:set-macro-character #\; #'debug-reader)
+  (cl:set-syntax-from-char #\] #\))
+  (cl:set-macro-character #\[ #'read-foreign-syntax)
+  (make-dispatch-macro-character #\! T)
+  (cl:set-dispatch-macro-character #\! #\" #'read-raw-string)
+  (cl:set-dispatch-macro-character #\# #\" #'concat-string)
+  (cl:set-dispatch-macro-character
+   #\! #\(
+   (cl:lambda (srm chr arg)
+     (declare (ignore chr arg))
+     (cons 'cl:funcall (read-delimited-list #\) srm T))))
+  (cl:set-dispatch-macro-character #\# #\Z
+                                   #'zrseriesi::series-reader)
+  (cl:set-dispatch-macro-character #\# #\M
+                                   #'zrseriesi::abbreviated-map-fn-reader)
+  (cl:set-dispatch-macro-character
+   #\# #\@
+   (cl:lambda (srm chr arg)
+     (declare (ignore chr arg))
+     `(eval-always
+       ,(read srm T nil T))))
+  (cl:set-dispatch-macro-character #\# #\;
+                                   #'srfi-62:s-expression-comments)
+  (cl:set-dispatch-macro-character
+   #\# (character "")
+   (cl:lambda (srm chr arg)
+     (declare (ignore chr arg))
+     (cons 'eval-always
+           (read-delimited-list (character "") srm T))))
+  (cl:set-dispatch-macro-character #\# (character "") ;(char-code #\ETX)
+                                   (lambda (s c) 
+                                     (declare (ignore c)) 
+                                     (loop (or (read-char s nil) 
+                                               (return))) 
+                                     (values))))
+
             
- (defconstant bcl-syntax *bcl*))
+(defconstant bcl-syntax *bcl*))
 
 
 (defmacro then (&body body)
-  `(progn . ,body))
+  (typecase body
+    ((cons (cons (cons symbol (cons T null)) *) *)
+     `(let* . ,body))
+    (T `(progn . ,body))))
 
 
 (defmacro else (&body body)
-  `(progn . ,body))
+  (typecase body
+    ((cons (cons (cons symbol (cons T null)) *) *)
+     `(let* . ,body))
+    (T `(progn . ,body))))
 
 
 (defmacro Zdefun (name (&rest args) &body body)

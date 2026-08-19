@@ -100,4 +100,11 @@
      `(cl:map ,result-type ,function ,first-sequence ,@more-sequences))))
 
 
+(defmacro while (pred &body body)
+  `(loop :while ,pred :do (progn ,@body)))
+
+
+#|(defmacro until (pred &body body)
+  `(loop :until ,pred :do (progn ,@body)))|#
+    
 ;;; *EOF*
