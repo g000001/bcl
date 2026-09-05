@@ -346,7 +346,7 @@
      (cons 'eval-always
            (read-delimited-list (character "") srm T))))
   (cl:set-dispatch-macro-character #\# (character "") ;(char-code #\ETX)
-                                   (lambda (s c) 
+                                   (cl:lambda (s c) 
                                      (declare (ignore c)) 
                                      (loop (or (read-char s nil) 
                                                (return))) 
